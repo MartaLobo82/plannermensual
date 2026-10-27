@@ -16,6 +16,9 @@ const CATS = {
   medicos:    { n: 'Médicos',           e: '🩺', color: '#c2453d', estados: 'medicos',    hecho: '✅Completada', persona: true },
 };
 const CAT_REDES = { n: 'Redes', e: '📱', color: '#d0587e' };
+// Colores de serie (para «Volver a los de serie»)
+const COLOR_ACENTO = '#9c4f35';
+const COLORES_SERIE = Object.fromEntries([...Object.entries(CATS).map(([k, c]) => [k, c.color]), ['redes', '#d0587e'], ['eventos', '#5b6bb5']]);
 const CAT_EVENTO = { n: 'Eventos', e: '📅', color: '#5b6bb5' };
 const catDe = (k) => CATS[k] || (k === 'redes' ? CAT_REDES : k === 'eventos' ? CAT_EVENTO : { n: k, e: '•', color: '#888' });
 

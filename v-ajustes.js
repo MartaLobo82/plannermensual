@@ -25,6 +25,7 @@ VISTAS.ajustes = (cont) => {
         <label class="campo"><span>Aspecto</span><select id="aj-tema"><option value="auto">Como el sistema</option><option value="claro"${A.tema === 'claro' ? ' selected' : ''}>Claro</option><option value="noche"${A.tema === 'noche' ? ' selected' : ''}>Oscuro</option></select></label>
         <label class="campo"><span>Fechas clave que se ven en Inicio</span><input id="aj-claves" type="number" min="1" max="10" value="${A.diasClave || 4}"></label>
       </section>
+      ${tarjetaColores()}
       ${typeof tarjetaGoogle === 'function' ? tarjetaGoogle() : ''}
       <section class="tarjeta"><h2>Copias de seguridad</h2>
         <p class="suave" style="margin-top:0">Tus datos viven en este navegador. Guarda una copia de vez en cuando (y conecta Google para tenerlos también en el móvil).</p>
@@ -98,6 +99,7 @@ VISTAS.ajustes = (cont) => {
     await hacerCopia('antes de borrar');
     const aj = D.ajustes; D = datosVacios(); D.ajustes = aj; cambio(); aviso('Todo borrado. Tienes la copia en Descargas.');
   };
+  enlazarColores(cont);
   if (typeof enlazarGoogle === 'function') enlazarGoogle(cont);
 };
 
@@ -142,6 +144,63 @@ function aplicarTema() {
   const t = D && D.ajustes.tema;
   const noche = t === 'noche' || (t !== 'claro' && matchMedia('(prefers-color-scheme: dark)').matches);
   document.documentElement.dataset.theme = noche ? 'noche' : 'claro';
-  const m = $('meta[name=theme-color]'); if (m) m.content = noche ? '#1c1916' : '#9c4f35';
+  aplicarColores(noche);
+}
+
+// ---------- colores ----------
+const PALETAS = [
+  ['Terracota', '#9c4f35'], ['Salvia', '#5d7a62'], ['Bosque', '#2f5d50'], ['Rosa', '#b0506f'], ['Frambuesa', '#a3324f'],
+  ['Lavanda', '#7462a3'], ['Azul', '#3d6a9e'], ['Petróleo', '#1f6b72'], ['Mostaza', '#a1761a'], ['Grafito', '#45464a'],
+];
+const hexARgb = (h) => { h = h.replace('#', ''); if (h.length === 3) h = h.split('').map(c => c + c).join(''); return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16)); };
+const rgbAHex = (r) => '#' + r.map(x => Math.round(Math.max(0, Math.min(255, x))).toString(16).padStart(2, '0')).join('');
+const mezclar = (a, b, p) => { const x = hexARgb(a), y = hexARgb(b); return rgbAHex(x.map((v, i) => v * p + y[i] * (1 - p))); };
+const luz = (h) => { const [r, g, b] = hexARgb(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * r + .7152 * g + .0722 * b; };
+const contraste = (a, b) => { const x = luz(a), y = luz(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); };
+// Texto que se lee bien encima de un color
+const textoSobre = (h) => contraste(h, '#ffffff') >= contraste(h, '#1c1916') ? '#ffffff' : '#1c1916';
+function coloresDe() { return (D && D.ajustes.colores) || {}; }
+function aplicarColores(noche = document.documentElement.dataset.theme === 'noche') {
+  const C = coloresDe();
+  // Categorías
+  Object.keys(CATS).forEach(k => { CATS[k].color = (C.cats || {})[k] || COLORES_SERIE[k]; });
+  CAT_REDES.color = (C.cats || {}).redes || COLORES_SERIE.redes;
+  CAT_EVENTO.color = (C.cats || {}).eventos || COLORES_SERIE.eventos;
+  // Color principal (en oscuro, más claro para que se lea sobre fondo negro)
+  const base = C.acento || COLOR_ACENTO;
+  let ac = base;
+  if (noche) { ac = mezclar(base, '#ffffff', .62); if (contraste(ac, '#24211d') < 4.5) ac = mezclar(base, '#ffffff', .45); }
+  const claro = noche ? mezclar(base, '#1c1916', .3) : mezclar(base, '#ffffff', .16);
+  let st = document.getElementById('estilo-colores');
+  if (!st) { st = document.createElement('style'); st.id = 'estilo-colores'; document.head.append(st); }
+  st.textContent = `:root, :root[data-theme="noche"] { --acento: ${ac}; --acento-claro: ${claro}; --sobre-acento: ${textoSobre(ac)}; }`;
+  const m = $('meta[name=theme-color]'); if (m) m.content = noche ? '#1c1916' : base;
+}
+function tarjetaColores() {
+  const C = coloresDe(), ac = C.acento || COLOR_ACENTO;
+  const cats = [...Object.keys(CATS).map(k => [k, CATS[k].e + ' ' + CATS[k].n]), ['redes', '📱 Redes'], ['eventos', '📅 Eventos']];
+  return `<section class="tarjeta" id="aj-colores" style="grid-column:1/-1"><h2>Colores</h2>
+    <p class="suave" style="margin-top:0">El color principal se usa en botones, el día de hoy, el menú y los avisos. Cada categoría tiene el suyo en las tareas y el calendario. Se guardan con tus datos, así que salen igual en el móvil.</p>
+    <h4>Color principal</h4>
+    <div class="colores-pre">${PALETAS.map(([n, c]) => `<button data-pre="${c}" class="${c.toLowerCase() === ac.toLowerCase() ? 'on' : ''}" style="--m:${c}"><i></i>${n}</button>`).join('')}
+      <label class="color-fila" style="border:0;padding:0;gap:6px"><input type="color" id="col-acento" value="${ac}" aria-label="Otro color"><span class="suave" style="flex:none">Otro…</span></label></div>
+    <div class="muestra"><button class="btn prim" type="button">Botón</button><span class="pill">etiqueta</span><span class="plazo hoy">⏰ Hoy</span><span class="rail-muestra" style="color:var(--acento);font-weight:600">Texto destacado</span></div>
+    <h4>Categorías</h4>
+    <div class="colores-cats">${cats.map(([k, t]) => { const v = k === 'redes' ? CAT_REDES.color : k === 'eventos' ? CAT_EVENTO.color : CATS[k].color; return `<div class="color-fila"><span class="chip-cat">${esc(t)}</span><input type="color" data-colcat="${k}" value="${v}" aria-label="Color de ${esc(t)}">${(C.cats || {})[k] ? `<button class="icono" data-colserie="${k}" title="Volver al de serie">↺</button>` : ''}</div>`; }).join('')}</div>
+    <div class="fila-btns" style="margin:12px 0 0"><button class="btn peq" id="col-serie">Volver a los colores de serie</button></div></section>`;
+}
+function enlazarColores(cont) {
+  const c = $('#aj-colores', cont); if (!c) return;
+  const C = () => D.ajustes.colores || (D.ajustes.colores = {});
+  const guardar = debounce(() => cambio(false), 300);
+  const ponerAcento = (v, repintar) => { C().acento = v; aplicarColores(); $$('[data-pre]', c).forEach(b => b.classList.toggle('on', b.dataset.pre.toLowerCase() === v.toLowerCase())); if (repintar) cambio(); else guardar(); };
+  $$('[data-pre]', c).forEach(b => b.onclick = () => { $('#col-acento', c).value = b.dataset.pre; ponerAcento(b.dataset.pre); });
+  $('#col-acento', c).oninput = (e) => ponerAcento(e.target.value);
+  $$('[data-colcat]', c).forEach(i => {
+    i.oninput = () => { const o = C(); o.cats = o.cats || {}; o.cats[i.dataset.colcat] = i.value; aplicarColores(); guardar(); };
+    i.onchange = () => cambio();
+  });
+  $$('[data-colserie]', c).forEach(b => b.onclick = () => { delete (C().cats || {})[b.dataset.colserie]; aplicarColores(); cambio(); });
+  $('#col-serie', c).onclick = () => { delete D.ajustes.colores; aplicarColores(); cambio(); aviso('Colores de serie'); };
 }
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => aplicarTema());

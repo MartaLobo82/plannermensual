@@ -34,7 +34,7 @@ code { background: var(--panel); padding: 1px 5px; border-radius: 5px; font-size
 /* ---------- estructura ---------- */
 .app { display: grid; grid-template-columns: 78px 1fr; height: 100vh; height: 100dvh; }
 .rail { background: var(--panel); border-right: 1px solid var(--linea); display: flex; flex-direction: column; align-items: center; padding: 14px 0 10px; gap: 1px; overflow-y: auto; }
-.rail .logo { width: 38px; height: 38px; border-radius: 11px; background: var(--acento); color: #fff; display: grid; place-items: center; font: italic 600 21px var(--serif); margin-bottom: 12px; flex: none; }
+.rail .logo { width: 38px; height: 38px; border-radius: 11px; background: var(--acento); color: var(--sobre-acento, #fff); display: grid; place-items: center; font: italic 600 21px var(--serif); margin-bottom: 12px; flex: none; }
 .rail button, .btn-mas { width: 66px; border: 0; background: none; border-radius: 10px; padding: 7px 0 5px; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--suave); font-size: 10.5px; flex: none; cursor: pointer; }
 .rail button svg, .btn-mas svg { width: 21px; height: 21px; }
 .btn-mas svg { fill: currentColor; stroke: none; }
@@ -67,8 +67,7 @@ h4 { margin: 0 0 6px; font-size: 14px; }
 /* ---------- botones ---------- */
 .btn { border: 1px solid var(--linea-fuerte); background: var(--hoja); border-radius: 999px; padding: 7px 14px; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; white-space: nowrap; }
 .btn:hover { border-color: var(--tinta); }
-.btn.prim { background: var(--acento); border-color: var(--acento); color: #fff; }
-:root[data-theme="noche"] .btn.prim { color: #1c1916; }
+.btn.prim { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento, #fff); }
 .btn.prim:hover { filter: brightness(1.07); }
 .btn.peq { padding: 4px 11px; font-size: 12.5px; }
 .btn.peligro { background: var(--rojo); border-color: var(--rojo); color: #fff; }
@@ -85,7 +84,7 @@ h4 { margin: 0 0 6px; font-size: 14px; }
 .pestanas { display: flex; gap: 4px; border-bottom: 1px solid var(--linea); margin-bottom: 18px; overflow-x: auto; scrollbar-width: none; }
 .pestanas button { border: 0; background: none; padding: 9px 14px; color: var(--suave); border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; font-weight: 500; }
 .pestanas button.on { color: var(--acento); border-color: var(--acento); }
-.fab { display: none; position: fixed; right: 18px; bottom: calc(82px + env(safe-area-inset-bottom)); width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--acento); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.25); z-index: 30; place-items: center; }
+.fab { display: none; position: fixed; right: 18px; bottom: calc(82px + env(safe-area-inset-bottom)); width: 54px; height: 54px; border-radius: 50%; border: 0; background: var(--acento); color: var(--sobre-acento, #fff); box-shadow: 0 6px 18px rgba(0,0,0,.25); z-index: 30; place-items: center; }
 .fab svg { width: 26px; height: 26px; stroke-width: 2.2; }
 
 /* ---------- filtros ---------- */
@@ -173,9 +172,9 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .mini-mes button { border: 0; background: none; border-radius: 8px; padding: 4px 0 2px; font-size: 12.5px; position: relative; min-height: 32px; display: flex; flex-direction: column; align-items: center; }
 .mini-mes button:hover { background: var(--panel); }
 .mini-mes button.fuera { color: var(--tenue); opacity: .5; }
-.mini-mes button.hoy { background: var(--acento); color: #fff; font-weight: 600; }
+.mini-mes button.hoy { background: var(--acento); color: var(--sobre-acento, #fff); font-weight: 600; }
 .mini-mes button i { font-style: normal; font-size: 9px; line-height: .8; color: var(--acento); letter-spacing: -1px; }
-.mini-mes button.hoy i { color: #fff; }
+.mini-mes button.hoy i { color: var(--sobre-acento, #fff); }
 
 /* ---------- Calendario ---------- */
 .nav-cal { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -195,7 +194,7 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .celda.sel { box-shadow: inset 0 0 0 2px var(--acento); }
 .celda.soltar { background: var(--acento-claro); }
 .celda .num { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; padding: 1px 2px; }
-.celda.hoy .num span { background: var(--acento); color: #fff; border-radius: 999px; padding: 0 7px; font-weight: 600; }
+.celda.hoy .num span { background: var(--acento); color: var(--sobre-acento, #fff); border-radius: 999px; padding: 0 7px; font-weight: 600; }
 .celda .num i { font-style: normal; font-size: 11px; }
 .mini { font-size: 11.5px; line-height: 1.3; padding: 1px 5px; border-radius: 5px; background: color-mix(in srgb, var(--c) 15%, var(--hoja)); border-left: 2.5px solid var(--c); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .mini.ev { background: none; border-left-color: transparent; padding-left: 2px; color: var(--suave); }
@@ -213,7 +212,7 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .mini-mes button.n1 { background: color-mix(in srgb, var(--acento) 12%, transparent); }
 .mini-mes button.n2 { background: color-mix(in srgb, var(--acento) 24%, transparent); }
 .mini-mes button.n3 { background: color-mix(in srgb, var(--acento) 38%, transparent); }
-.mini-mes button.n4 { background: color-mix(in srgb, var(--acento) 55%, transparent); color: #fff; }
+.mini-mes button.n4 { background: color-mix(in srgb, var(--acento) 55%, transparent); }
 
 /* ---------- Descarga ---------- */
 .captura { display: flex; gap: 8px; padding: 10px; margin-bottom: 8px; flex-wrap: wrap; }
@@ -314,7 +313,7 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .actividad input[data-ak=quien] { width: 100px; }
 .dias-sem { display: inline-flex; gap: 2px; }
 .dias-sem button { width: 27px; height: 27px; border-radius: 7px; border: 1px solid var(--linea); background: var(--papel); font-size: 12px; padding: 0; }
-.dias-sem button.on { background: var(--acento); border-color: var(--acento); color: #fff; }
+.dias-sem button.on { background: var(--acento); border-color: var(--acento); color: var(--sobre-acento, #fff); }
 
 /* ---------- formularios ---------- */
 .form { display: flex; flex-wrap: wrap; gap: 10px 12px; }
@@ -331,6 +330,17 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .cal-fila { display: flex; gap: 6px; align-items: center; margin-bottom: 6px; }
 .cal-fila input:not([type]) { flex: 1; }
 .cal-fila .punto-in { width: 46px; flex: none; text-align: center; }
+.colores-pre { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.colores-pre button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--linea-fuerte); background: var(--hoja); border-radius: 999px; padding: 5px 12px 5px 6px; font-size: 13px; }
+.colores-pre button i { width: 20px; height: 20px; border-radius: 50%; background: var(--m); }
+.colores-pre button.on { border-color: var(--acento); box-shadow: 0 0 0 2px color-mix(in srgb, var(--acento) 35%, transparent); font-weight: 500; }
+.color-fila { display: flex; align-items: center; gap: 10px; padding: 5px 0; border-top: 1px solid var(--linea); }
+.color-fila:first-child { border-top: 0; }
+.color-fila span { flex: 1; }
+.color-fila input[type=color] { width: 44px; height: 30px; padding: 2px; border-radius: 8px; cursor: pointer; }
+.color-fila .icono { font-size: 13px; }
+.colores-cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0 24px; }
+.muestra { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 4px 0 14px; padding: 12px; background: var(--papel); border-radius: 12px; }
 .peligro-zona { margin-top: 18px; border-color: color-mix(in srgb, var(--rojo) 40%, var(--linea)); }
 .pie-app { text-align: center; margin-top: 24px; font-size: 12px; }
 .pasos-g { padding-left: 18px; font-size: 13px; line-height: 1.55; }
@@ -352,7 +362,7 @@ details.atrasadas summary { cursor: pointer; color: var(--rojo); font-weight: 60
 .pie { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; align-items: center; position: sticky; bottom: -18px; background: var(--hoja); padding: 10px 0 2px; }
 .pie .hueco { flex: 1; }
 .bienvenida { text-align: center; }
-.logo-grande { width: 64px; height: 64px; margin: 0 auto 10px; border-radius: 18px; background: var(--acento); color: #fff; display: grid; place-items: center; font: italic 600 34px var(--serif); }
+.logo-grande { width: 64px; height: 64px; margin: 0 auto 10px; border-radius: 18px; background: var(--acento); color: var(--sobre-acento, #fff); display: grid; place-items: center; font: italic 600 34px var(--serif); }
 #avisos { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 60; align-items: center; pointer-events: none; }
 .aviso { background: var(--tinta); color: var(--papel); border-radius: 999px; padding: 9px 16px; box-shadow: 0 8px 24px rgba(0,0,0,.2); display: flex; gap: 14px; align-items: center; pointer-events: auto; transition: opacity .4s, transform .4s; font-size: 13.5px; max-width: 92vw; }
 .aviso button { border: 0; background: none; color: var(--acento-claro); font-weight: 600; padding: 0; }
