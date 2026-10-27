@@ -33,28 +33,22 @@ function datosVacios() {
     menu: {}, cocina: {}, despensa: ['❄️ Pollo troceado', '❄️ Carne picada', '❄️ Pescado blanco', '🥫 Arroz', '🥫 Pasta', '🥫 Legumbres'],
     revision: {},
     calendarios: [
-      { nombre: 'MÉDICOS', punto: '🔴' }, { nombre: 'CLUB DE LECTURA ROMÁNTICA GASTEIZ', punto: '🟣' }, { nombre: 'CITAS', punto: '🟡' },
-      { nombre: 'MARTA LOBO', punto: '🟠' }, { nombre: 'FAMILIA', punto: '🔵' }, { nombre: 'MINIS COLEGIOS', punto: '🟢' },
-      { nombre: 'MINIS', punto: '⚪' }, { nombre: 'EXTRAESCOLARES', punto: '⚪' }],
-    clave: ['MARTA LOBO', 'CLUB DE LECTURA ROMÁNTICA GASTEIZ'],
+      { nombre: 'TRABAJO', punto: '🟠' }, { nombre: 'FAMILIA', punto: '🔵' }, { nombre: 'MÉDICOS', punto: '🔴' },
+      { nombre: 'COLEGIO', punto: '🟢' }, { nombre: 'CITAS', punto: '🟡' }, { nombre: 'EXTRAESCOLARES', punto: '⚪' }],
+    clave: ['TRABAJO'],
     dispo: {
       dias: {},
       // A partir de esta fecha, el turno y las extraescolares salen de las reglas
       reglasDesde: '',
-      rotacion: { lunes: '2026-09-07', turno: 'MAÑANA' },
+      rotacion: { lunes: '', turno: 'MAÑANA' },
       franjas: { 'MAÑANA': 'Tarde libre', 'TARDE': 'Mañana libre' },
       actividades: [],
     },
     enlaces: [
       { t: '📆 Google Calendar', url: 'https://calendar.google.com' },
-      { t: '✉️ Mailerlite', url: 'https://dashboard.mailerlite.com/' },
-      { t: '📱 Instagram', url: 'https://www.instagram.com/martaloboautora' },
-      { t: '🛍️ Etsy Shop Manager', url: 'https://www.etsy.com/your/shops/me/dashboard' },
-      { t: '🌐 WordPress', url: 'https://martalobo.es/wp-admin/' },
-      { t: '🎨 Canva', url: 'https://www.canva.com/' },
-      { t: '📚 Amazon KDP', url: 'https://kdp.amazon.com/es_ES/bookshelf' }],
+      { t: '🎨 Canva', url: 'https://www.canva.com/' }],
     listas: listasPorDefecto(),
-    ajustes: { copiaDias: 7, tema: 'auto', diasClave: 4 },
+    ajustes: { copiaDias: 7, tema: 'auto', diasClave: 4, nombre: '' },
   };
 }
 function listasPorDefecto() {
@@ -76,7 +70,7 @@ function listasPorDefecto() {
     prioridad: ['🔴Alta', '🟠Media', '🔵Baja'],
     energia: ['⚡ Alta', '🔋 Media', '🪫 Baja'],
     catDescarga: ['📖Novela', 'Web', '📤Newsletter', '📲Redes sociales', '🛒Etsy', '📚Club de Lectura', '👣Niños', '🏡Casa', '🩺Médicos', '🎓Formación'],
-    personas: ['Marta', 'Dani', 'Martín', 'Adrián', 'Familia'],
+    personas: ['Yo', 'Pareja', 'Hijo/a', 'Familia'],
     catCompra: ['Frescos', 'Congelados', 'Despensa', 'Limpieza', 'Higiene y cuidado personal', 'Bebidas', 'Otros'],
     supers: ['Mercadona', 'Carrefour', 'Frutería / mercado', 'Lidl', 'Otro'],
     segmentos: ['Toda la lista', 'Lectores VIP', 'Club de lectura', 'Nuevos suscriptores', 'Compradores', 'Newsletter mensual', 'Solo novedades'],
@@ -92,6 +86,7 @@ function listasPorDefecto() {
 // Rellena lo que falte (datos de una versión anterior o de una importación parcial)
 function completar(d) {
   const base = datosVacios();
+  if (d.ajustes && d.ajustes.nombre === undefined) d.ajustes.nombre = (d.calendarios || []).some(c => c.nombre === 'MARTA LOBO') ? 'Marta' : '';
   Object.keys(base).forEach(k => { if (d[k] === undefined) d[k] = base[k]; });
   Object.keys(base.dispo).forEach(k => { if (d.dispo[k] === undefined) d.dispo[k] = base.dispo[k]; });
   Object.keys(base.ajustes).forEach(k => { if (d.ajustes[k] === undefined) d.ajustes[k] = base.ajustes[k]; });
@@ -222,7 +217,9 @@ function buscarRef(tipo, id) {
 function importarDatos(j, modo) {
   const nuevo = j.datos || {};
   if (modo === 'sustituir') {
-    D = completar({ ...datosVacios(), ...nuevo, listas: { ...listasPorDefecto(), ...(nuevo.listas || {}) }, ajustes: D ? D.ajustes : datosVacios().ajustes });
+    const aj = { ...(D ? D.ajustes : datosVacios().ajustes) };
+    if (!aj.nombre) delete aj.nombre; // se deduce de los datos importados
+    D = completar({ ...datosVacios(), ...nuevo, listas: { ...listasPorDefecto(), ...(nuevo.listas || {}) }, ajustes: aj });
   } else {
     // Juntar: añade lo que no esté (por id) y no toca lo que ya tienes
     ['tareas', 'descarga', 'objetivos', 'eventos', 'ideas', 'batch', 'compra'].forEach(k => {

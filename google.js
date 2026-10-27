@@ -283,9 +283,9 @@ function tarjetaGoogle() {
     : `<p style="margin-top:0">Guarda tu planner en tu Google Drive para tenerlo igual en el móvil y en el ordenador, y trae solos los eventos y los turnos de Google Calendar.</p>
       <button class="btn prim" id="gg-on"${GG.clientId ? '' : ' disabled'}>Conectar con Google</button>`}
     <details style="margin-top:12px"${GG.clientId ? '' : ' open'}><summary class="suave" style="cursor:pointer">${GG.clientId ? 'Configuración de Google' : 'Antes de conectar: configurar Google (una sola vez)'}</summary>
-      <p class="suave" style="font-size:13px">Si ya lo hiciste para Novelia Studio, usa el mismo proyecto y el mismo ID: solo tienes que añadir el paso 2 (Google Calendar API).</p>
+      <p class="suave" style="font-size:13px">Si ya tienes un ID de cliente de Google para otra app en esta misma web, puedes usar el mismo: solo añade el paso 2.</p>
       <ol class="suave pasos-g">
-        <li>Entra en <b>console.cloud.google.com</b> con tu cuenta y crea un proyecto (por ejemplo «Marta Lobo apps»).</li>
+        <li>Entra en <b>console.cloud.google.com</b> con tu cuenta y crea un proyecto (por ejemplo «Mis apps»).</li>
         <li>En «APIs y servicios» › «Biblioteca», habilita <b>Google Drive API</b> y <b>Google Calendar API</b>.</li>
         <li>En «Pantalla de consentimiento de OAuth»: tipo <b>Externo</b>, tu correo, y en «Usuarios de prueba» añade tu cuenta.</li>
         <li>En «Credenciales» › «Crear credenciales» › <b>ID de cliente de OAuth</b> › <b>Aplicación web</b>. En «Orígenes de JavaScript autorizados» pon <b>${esc(location.origin)}</b>.</li>

@@ -43,7 +43,7 @@ VISTAS.inicio = (cont) => {
   const fechasClave = D.eventos.filter(e => e.tipo !== 'Recurrente' && e.mantener !== 'No' && e.fecha >= H && D.clave.includes(e.cal)).sort((a, b) => a.fecha.localeCompare(b.fecha)).slice(0, D.ajustes.diasClave || 4);
 
   cont.innerHTML = `<div class="pagina inicio">
-    <header class="cab-pag hola"><div><h1>${saludo}${D.ajustes.nombre !== '' ? ', ' + esc(D.ajustes.nombre || 'Marta') : ''}</h1>
+    <header class="cab-pag hola"><div><h1>${saludo}${D.ajustes.nombre ? ', ' + esc(D.ajustes.nombre) : ''}</h1>
       <p class="sub">${fechaLarga(H)}${fr ? ` · <b>${iconoFranja(fr)} ${esc(fr)}</b>` : ''}${ex ? ` · 🧒 ${esc(ex)}` : ''}</p></div>
       <div class="acciones-pag"><button class="btn" id="in-apunte">🧠 Apuntar algo</button><button class="btn prim" id="in-nueva">+ Tarea</button></div></header>
     <div class="avisos-in">${avisos.map(a => `<div>${a}</div>`).join('')}</div>

@@ -21,7 +21,7 @@ VISTAS.ajustes = (cont) => {
   cont.innerHTML = `<div class="pagina ajustes">${cabecera('⚙️ Ajustes', '')}
     <div class="rejilla r2">
       <section class="tarjeta"><h2>Tú</h2>
-        <label class="campo"><span>Tu nombre (para el saludo)</span><input id="aj-nombre" value="${esc(A.nombre ?? 'Marta')}"></label>
+        <label class="campo"><span>Tu nombre (para el saludo)</span><input id="aj-nombre" value="${esc(A.nombre || '')}" placeholder="Tu nombre"></label>
         <label class="campo"><span>Aspecto</span><select id="aj-tema"><option value="auto">Como el sistema</option><option value="claro"${A.tema === 'claro' ? ' selected' : ''}>Claro</option><option value="noche"${A.tema === 'noche' ? ' selected' : ''}>Oscuro</option></select></label>
         <label class="campo"><span>Fechas clave que se ven en Inicio</span><input id="aj-claves" type="number" min="1" max="10" value="${A.diasClave || 4}"></label>
       </section>
@@ -34,7 +34,7 @@ VISTAS.ajustes = (cont) => {
         <p class="tenue">${A.ultimaCopia ? 'Última copia: ' + new Date(A.ultimaCopia).toLocaleString('es-ES', { dateStyle: 'medium', timeStyle: 'short' }) : 'Aún no has hecho ninguna copia.'}</p>
       </section>
       <section class="tarjeta"><h2>Traer datos del Excel</h2>
-        <p class="suave" style="margin-top:0">Carga el archivo <b>planner-importar.json</b> que te preparó Claude a partir de tu Planner Mensual de Excel.</p>
+        <p class="suave" style="margin-top:0">Si tienes un archivo de importación (<b>planner-importar.json</b>) hecho a partir de un Planner Mensual de Excel, cárgalo aquí.</p>
         <button class="btn" id="aj-imp">Importar archivo…</button>
         <p class="tenue">Puedes juntarlo con lo que ya tienes (no duplica nada) o sustituirlo todo.</p>
       </section>

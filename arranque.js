@@ -4,7 +4,7 @@
 //  el móvil), atajos, copia automática y modo sin conexión.
 // =====================================================================
 
-const VERSION_APP = '1.1';
+const VERSION_APP = '1.2';
 
 (async function arrancar() {
   try { D = await Store.get('datos'); } catch (e) { console.error(e); }
@@ -95,7 +95,7 @@ const VERSION_APP = '1.1';
 function bienvenida() {
   modal(`<div class="bienvenida"><div class="logo-grande">P</div><h3>Tu planner, ahora como app</h3>
     <p class="suave">Todo lo del Planner Mensual de Excel: Inicio, calendario, tareas por categoría, descarga mental, objetivos, redes, casa y menú, eventos y turnos. Funciona sin conexión y se instala en el móvil.</p>
-    <p class="suave">¿Tienes el archivo <b>planner-importar.json</b> que te preparó Claude con tus datos del Excel?</p></div>
+    <p class="suave">Si tienes un archivo <b>planner-importar.json</b> con tus datos de Excel, cárgalo; si no, empieza en blanco y lo vas rellenando.</p></div>
     <div class="pie" style="flex-wrap:wrap"><button class="btn" data-cerrar>Empezar en blanco</button><button class="btn prim" id="bv-imp">Cargar mis datos del Excel</button></div>`, {
     alAbrir: (m, cerrar) => {
       $('#bv-imp', m).onclick = () => { cerrar(); elegirArchivo((j) => { if (!j || j.app !== 'planner' || !j.datos) return aviso('Ese archivo no es del Planner'); importarDatos(j, 'sustituir'); aviso('¡Listo! Ya tienes aquí tus datos del Excel'); irA('inicio'); }); };
