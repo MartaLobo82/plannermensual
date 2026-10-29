@@ -114,11 +114,16 @@ function elegirArchivo(fn) {
 function importarConPregunta(j) {
   const d = j.datos || {};
   const n = (k) => (d[k] || []).length;
-  modal(`<h3>Importar del Excel</h3>
-    <p class="suave">El archivo trae ${plural(n('tareas'), 'tarea', 'tareas')}, ${plural(n('eventos'), 'evento', 'eventos')}, ${plural(n('batch'), 'pieza', 'piezas')} de redes, ${plural(n('ideas'), 'idea', 'ideas')}, ${plural(n('objetivos'), 'objetivo', 'objetivos')}, ${plural(n('descarga'), 'apunte', 'apuntes')} y ${plural(Object.keys((d.dispo || {}).dias || {}).length, 'día', 'días')} de turnos.</p>
+  const diasMenu = Object.keys(d.menu || {}).sort();
+  const partes = [[n('tareas'), 'tarea', 'tareas'], [n('eventos'), 'evento', 'eventos'], [n('batch'), 'pieza de redes', 'piezas de redes'], [n('ideas'), 'idea', 'ideas'],
+    [n('objetivos'), 'objetivo', 'objetivos'], [n('descarga'), 'apunte', 'apuntes'], [Object.keys((d.dispo || {}).dias || {}).length, 'día de turnos', 'días de turnos'],
+    [diasMenu.length, 'día de menú', 'días de menú'], [n('compra'), 'cosa de la compra', 'cosas de la compra']].filter(x => x[0]).map(([c, a, b]) => plural(c, a, b));
+  const soloMenu = diasMenu.length && partes.length === 1;
+  modal(`<h3>${soloMenu ? 'Importar menú' : 'Importar datos'}</h3>
+    <p class="suave">El archivo trae ${partes.join(', ').replace(/, ([^,]*)$/, ' y $1') || 'nada que importar'}${diasMenu.length ? ` (del ${fechaCorta(diasMenu[0])} al ${fechaCorta(diasMenu[diasMenu.length - 1])})` : ''}.</p>
     <div class="opciones-imp">
       <label><input type="radio" name="imp" value="juntar" checked> <b>Juntar</b> con lo que ya tengo <small>Añade lo que falte; lo que ya tienes no se toca. Importar dos veces no duplica.</small></label>
-      <label><input type="radio" name="imp" value="sustituir"> <b>Sustituir</b> todo <small>Te descargo antes una copia de lo actual.</small></label></div>
+      ${soloMenu ? '' : '<label><input type="radio" name="imp" value="sustituir"> <b>Sustituir</b> todo <small>Te descargo antes una copia de lo actual.</small></label>'}</div>
     <div class="pie"><button class="btn" data-cerrar>Cancelar</button><button class="btn prim" id="im-ok">Importar</button></div>`, {
     alAbrir: (m, cerrar) => {
       $('#im-ok', m).onclick = async () => {
@@ -126,8 +131,8 @@ function importarConPregunta(j) {
         cerrar();
         if (modo === 'sustituir' && (D.tareas.length || D.eventos.length)) await hacerCopia('antes de importar');
         importarDatos(j, modo);
-        aviso('Datos del Excel importados');
-        irA('inicio');
+        if (soloMenu) { aviso(`Menú importado: ${plural(diasMenu.length, 'día', 'días')}`); irA('casa', { ui: { cPest: 'menu', mMes: mesDe(diasMenu[diasMenu.length - 1]) } }); }
+        else { aviso('Datos importados'); irA('inicio'); }
       };
     }
   });

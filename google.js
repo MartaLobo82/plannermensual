@@ -71,6 +71,8 @@ async function traerRemoto(remoto) {
   const r = await api(`https://www.googleapis.com/drive/v3/files/${remoto.id}?alt=media`);
   const j = await r.json();
   if (!j || !j.datos) throw new Error('archivo');
+  // Si mientras se descargaba has cambiado algo aquí, no lo piso: pregunto
+  if (GG.e.sucio || huella(sinMarca()) !== GG.e.huella) { GG.e.sucio = GG.e.sucio || Date.now(); GG.guardarE(); GG.ocupado = false; return conflicto(remoto); }
   GG.aplicando = true;
   D = completar(j.datos);
   await Store.set('datos', D);
