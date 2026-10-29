@@ -4,7 +4,7 @@
 //  el móvil), atajos, copia automática y modo sin conexión.
 // =====================================================================
 
-const VERSION_APP = '1.3';
+const VERSION_APP = '1.4';
 
 (async function arrancar() {
   try { D = await Store.get('datos'); } catch (e) { console.error(e); }
@@ -89,7 +89,12 @@ const VERSION_APP = '1.3';
   }
 
   if (typeof arrancarGoogle === 'function') arrancarGoogle();
-  if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+    // Cuando hay versión nueva: se instala sola y la app se recarga al momento (si no estás escribiendo en una ventana)
+    const habia = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.addEventListener('controllerchange', () => { if (!habia || window._recargando) return; window._recargando = true; guardarYa().finally(() => { if (!document.querySelector('.velo')) location.reload(); else aviso('Hay una versión nueva: cierra y abre la app para tenerla'); }); });
+    navigator.serviceWorker.register('sw.js').then(reg => { reg.update().catch(() => {}); document.addEventListener('visibilitychange', () => { if (!document.hidden) reg.update().catch(() => {}); }); }).catch(() => {});
+  }
 })();
 
 function bienvenida() {
